@@ -1,0 +1,272 @@
+<?php
+
+/**
+ * @file
+ * Install file the Ting search context.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function ting_search_context_schema() {
+  $schema = array();
+
+  // TODO: Do we need more database indexes?
+  $schema['ting_search_context_contexts'] = array(
+    'description' => 'A table to hold the system and user defined contexts',
+    'fields' => array(
+      'context_id' => array(
+        'description' => 'Primary key: Unique context ID',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'type' => array(
+        'description' => 'The type of this context (machine-readable)',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'name' => array(
+        'description' => 'A human-readable name of the context',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+            // A machine-name identifier of the system context - or the parent
+            // system context if this is a subject context.
+            // Will not be set for search string contexts, since they dont
+            // have a parent (se below).
+      'context' => array(
+        'description' => 'The machine-name of the context.',
+        'type' => 'varchar',
+        'length' => 32,
+      ),
+            // We allow administrators to create more specific versions of
+            // certain system contexts, by associating one or more subjects
+            // to the context.
+      'subjects' => array(
+        'description' => 'A comma-separated list of the subjects of this context.',
+        'type' => 'varchar',
+        'length' => 255,
+      ),
+            // Administrators can also extend the system by creating search
+            // string contexts. Search contexts doesn't have a context and
+            // subject value. Unlike subjects contexts, search string contexts
+            // doesn't have a parent. The context is just the search string.
+      'search' => array(
+        'description' => 'The search string of this context.',
+        'type' => 'varchar',
+        'length' => 255,
+      ),
+    ),
+    'primary key' => array('context_id'),
+        // Enforce unique contexts on the database level.
+    'unique keys' => array(
+      'subject' => array('context', 'subjects'),
+      'search' => array('search'),
+    ),
+  );
+
+  $schema['ting_search_context_nodes_rated'] = array(
+    'description' => 'Stores information about nodes rated, thus managing the state of the context rating system',
+    'fields' => array(
+      'context_id' => array(
+        'description' => 'The ID of the context the node is rated in',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'nid' => array(
+        'description' => 'The ID of the node being rated',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'rating' => array(
+        'description' => 'The rating of the node in the context specified by context_id',
+        'type' => 'int',
+        'size' => 'tiny',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 1,
+      ),
+    ),
+    'primary key' => array('context_id', 'nid'),
+    'foreign keys' => array(
+      'context' => array(
+        'table' => 'ting_search_context_contexts',
+        'columns' => array('context_id' => 'context_id'),
+      ),
+      'node' => array(
+        'table' => 'node',
+        'columns' => array('nid' => 'nid'),
+      ),
+    ),
+    'indexes' => array(
+      'nid' => array('nid'),
+    ),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function ting_search_context_install() {
+  _ting_search_context_install_system_contexts();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function ting_search_context_uninstall() {
+  variable_del('ting_search_context_position');
+  variable_del('ting_search_context_fallback_images');
+}
+
+/**
+ * Install the module's system contexts in the database.
+ *
+ * System contexts needs to live in the database, so they can be used to rate
+ * nodes in the same way as user-defined contexts (they need a context_id).
+ */
+function _ting_search_context_install_system_contexts() {
+  $system_contexts = _ting_search_context_system_contexts();
+
+  foreach ($system_contexts as $system_context) {
+    $system_context += array('type' => 'system');
+    $context_id = db_insert('ting_search_context_contexts')
+      ->fields($system_context)
+      ->execute();
+    watchdog('ting_search_context', 'Installed system context: %name', array(
+      '%name' => $system_context['name'],
+    ), WATCHDOG_INFO);
+  }
+}
+
+/**
+ * Keep a seperate function for system type contexts in the install file, which
+ * can be used by update functions. Also, we don't wanna save any translated
+ * strings in the DB.
+ * This should be kept in sync. with the definitions in the .module file.
+ *
+ * @see ting_search_context_get_system_contexts()
+ */
+function _ting_search_context_system_contexts() {
+  return array(
+    'movie' => array(
+      'name' => 'Movie',
+      'context' => 'movie',
+    ),
+    'music' => array(
+      'name' => 'Music',
+      'context' => 'music',
+    ),
+    'audio_books' => array(
+      'name' => 'Audio books',
+      'context' => 'audio_books',
+    ),
+    'adult_nonfiction' => array(
+      'name' => 'Adult nonfiction',
+      'context' => 'adult_nonfiction',
+    ),
+    'adult_fiction' => array(
+      'name' => 'Adult fiction',
+      'context' => 'adult_fiction',
+    ),
+    'children_nonfiction' => array(
+      'name' => 'Children nonfiction',
+      'context' => 'children_nonfiction',
+    ),
+    'children_fiction' => array(
+      'name' => 'Children fiction',
+      'context' => 'children_fiction',
+    ),
+    'neutral' => array(
+      'name' => 'Neutral',
+      'context' => 'neutral',
+    ),
+  );
+}
+
+/**
+ * Implements hook_disable().
+ */
+function ting_search_context_disable() {
+  // Make sure our admin view is completely removed from the system when the
+  // module is disabled. Since we are using handlers defined in this module in
+  // trying to use it after disable will result in errors.
+  if ($view = views_get_view('ting_search_context_rate_nodes')) {
+    $view->delete(TRUE);
+  }
+  if ($view = views_get_view('ting_search_context_contexts')) {
+    $view->delete(TRUE);
+  }
+  views_invalidate_cache();
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function ting_search_context_requirements($phase) {
+  $requirements = array();
+
+  if ($phase == 'runtime' && !libraries_get_path('jquery-ui-carousel')) {
+    $message = t('The jQuery RS carousel is not avialable. Ting search context uses this library to show the related content and will not function proberly without it.');
+    $message .= '<br>' . t('Please use the provided download link, extract the .zip file and place its content in profiles/ding2/libraries/jquery-ui-carousel');
+    $requirements['ting_search_context_jquery_carousel_library'] = array(
+      'title' => 'Ting search context missing carousel library',
+      // No need to use get_t() since this will only be executed in runtime.
+      'description' => $message,
+      'value' => l('Download jQuery RS carousel library', 'https://github.com/richardscarrott/jquery-ui-carousel/archive/1.0.1.zip'),
+      'severity' => REQUIREMENT_ERROR,
+      'weight' => -1000,
+    );
+  }
+
+  return $requirements;
+}
+
+/**
+ * Convert existing context machine names (and title for system contexts) to
+ * english.
+ */
+function ting_search_context_update_7000() {
+  // Ignore search contexts and the neutral context.
+  $contexts = db_select('ting_search_context_contexts', 'tsc')
+    ->fields('tsc', array('context_id', 'name', 'context', 'type'))
+    ->condition('tsc.context', 'neutral', '!=')
+    ->condition('tsc.type', 'type', '!=')
+    ->execute()
+    ->fetchAll();
+
+  // Create a translate map to use in the update.
+  $old_contexts = array('film', 'musik', 'lydbøger', 'voksen_fag',
+    'voksen_skøn', 'børne_fag', 'børne_skøn', 'neutral');
+  $system_contexts = _ting_search_context_system_contexts();
+  $translate_map = array_combine($old_contexts, $system_contexts);
+
+  foreach ($contexts as $context) {
+    // Just to be sure..
+    if (isset($translate_map[$context->context])) {
+      $new_context = $translate_map[$context->context];
+      $fields = array('context' => $new_context['context']);
+      // Only for system type contexts will we update the name, since the others
+      // are user created.
+      if ($context->type == 'system') {
+        $fields['name'] = $new_context['name'];
+      }
+
+      db_update('ting_search_context_contexts')
+        ->fields($fields)
+        ->condition('context_id', $context->context_id)
+        ->execute();
+    }
+  }
+}
