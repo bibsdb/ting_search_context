@@ -12,7 +12,7 @@
  */
 ?>
 
-<li class="rs-carousel-item">
+<li class="slick-item">
   <a href="<?php print $url; ?>">
     <div>
       <?php if(isset($image)): ?>

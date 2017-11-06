@@ -1,0 +1,68 @@
+/*
+Error: File to import not found or unreadable: zen.
+       Load paths:
+         Compass::SpriteImporter
+         /mnt/sdb1/www/alfabib.sonderborg.dk/drupal/sites/default/modules/ting_search_context/sass
+         /var/lib/gems/1.9.1/gems/compass-core-1.0.3/stylesheets
+        on line 12 of /mnt/sdb1/www/alfabib.sonderborg.dk/drupal/sites/default/modules/ting_search_context/sass/ting_search_context.base.scss
+
+7: 
+8: // Include compass
+9: @import "compass/css3";
+10: 
+11: // Grid - http://zengrids.com
+12: @import "zen";
+13: 
+14: // Include selected variables from DDBasic
+15: @import "configuration/_variables";
+16: 
+17: 
+
+Backtrace:
+/mnt/sdb1/www/alfabib.sonderborg.dk/drupal/sites/default/modules/ting_search_context/sass/ting_search_context.base.scss:12
+/var/lib/gems/1.9.1/gems/sass-3.4.7/lib/sass/tree/import_node.rb:66:in `rescue in import'
+/var/lib/gems/1.9.1/gems/sass-3.4.7/lib/sass/tree/import_node.rb:45:in `import'
+/var/lib/gems/1.9.1/gems/sass-3.4.7/lib/sass/tree/import_node.rb:28:in `imported_file'
+/var/lib/gems/1.9.1/gems/sass-3.4.7/lib/sass/tree/import_node.rb:37:in `css_import?'
+/var/lib/gems/1.9.1/gems/sass-3.4.7/lib/sass/tree/visitors/perform.rb:301:in `visit_import'
+/var/lib/gems/1.9.1/gems/sass-3.4.7/lib/sass/tree/visitors/base.rb:36:in `visit'
+/var/lib/gems/1.9.1/gems/sass-3.4.7/lib/sass/tree/visitors/perform.rb:158:in `block in visit'
+/var/lib/gems/1.9.1/gems/sass-3.4.7/lib/sass/stack.rb:79:in `block in with_base'
+/var/lib/gems/1.9.1/gems/sass-3.4.7/lib/sass/stack.rb:115:in `with_frame'
+/var/lib/gems/1.9.1/gems/sass-3.4.7/lib/sass/stack.rb:79:in `with_base'
+/var/lib/gems/1.9.1/gems/sass-3.4.7/lib/sass/tree/visitors/perform.rb:158:in `visit'
+/var/lib/gems/1.9.1/gems/sass-3.4.7/lib/sass/tree/visitors/base.rb:52:in `block in visit_children'
+/var/lib/gems/1.9.1/gems/sass-3.4.7/lib/sass/tree/visitors/base.rb:52:in `map'
+/var/lib/gems/1.9.1/gems/sass-3.4.7/lib/sass/tree/visitors/base.rb:52:in `visit_children'
+/var/lib/gems/1.9.1/gems/sass-3.4.7/lib/sass/tree/visitors/perform.rb:167:in `block in visit_children'
+/var/lib/gems/1.9.1/gems/sass-3.4.7/lib/sass/tree/visitors/perform.rb:179:in `with_environment'
+/var/lib/gems/1.9.1/gems/sass-3.4.7/lib/sass/tree/visitors/perform.rb:166:in `visit_children'
+/var/lib/gems/1.9.1/gems/sass-3.4.7/lib/sass/tree/visitors/base.rb:36:in `block in visit'
+/var/lib/gems/1.9.1/gems/sass-3.4.7/lib/sass/tree/visitors/perform.rb:186:in `visit_root'
+/var/lib/gems/1.9.1/gems/sass-3.4.7/lib/sass/tree/visitors/base.rb:36:in `visit'
+/var/lib/gems/1.9.1/gems/sass-3.4.7/lib/sass/tree/visitors/perform.rb:157:in `visit'
+/var/lib/gems/1.9.1/gems/sass-3.4.7/lib/sass/tree/visitors/perform.rb:8:in `visit'
+/var/lib/gems/1.9.1/gems/sass-3.4.7/lib/sass/tree/root_node.rb:36:in `css_tree'
+/var/lib/gems/1.9.1/gems/sass-3.4.7/lib/sass/tree/root_node.rb:20:in `render'
+/var/lib/gems/1.9.1/gems/sass-3.4.7/lib/sass/engine.rb:268:in `render'
+/var/lib/gems/1.9.1/gems/sass-3.4.7/lib/sass/plugin/compiler.rb:491:in `update_stylesheet'
+/var/lib/gems/1.9.1/gems/sass-3.4.7/lib/sass/plugin/compiler.rb:215:in `block in update_stylesheets'
+/var/lib/gems/1.9.1/gems/sass-3.4.7/lib/sass/plugin/compiler.rb:209:in `each'
+/var/lib/gems/1.9.1/gems/sass-3.4.7/lib/sass/plugin/compiler.rb:209:in `update_stylesheets'
+/var/lib/gems/1.9.1/gems/sass-3.4.7/lib/sass/plugin/compiler.rb:293:in `watch'
+/var/lib/gems/1.9.1/gems/compass-1.0.3/lib/compass/sass_compiler.rb:46:in `watch!'
+/var/lib/gems/1.9.1/gems/compass-1.0.3/lib/compass/commands/watch_project.rb:41:in `perform'
+/var/lib/gems/1.9.1/gems/compass-1.0.3/lib/compass/commands/base.rb:18:in `execute'
+/var/lib/gems/1.9.1/gems/compass-1.0.3/lib/compass/commands/project_base.rb:19:in `execute'
+/var/lib/gems/1.9.1/gems/compass-1.0.3/lib/compass/exec/sub_command_ui.rb:43:in `perform!'
+/var/lib/gems/1.9.1/gems/compass-1.0.3/lib/compass/exec/sub_command_ui.rb:15:in `run!'
+/var/lib/gems/1.9.1/gems/compass-1.0.3/bin/compass:30:in `block in <top (required)>'
+/var/lib/gems/1.9.1/gems/compass-1.0.3/bin/compass:44:in `call'
+/var/lib/gems/1.9.1/gems/compass-1.0.3/bin/compass:44:in `<top (required)>'
+/usr/local/bin/compass:23:in `load'
+/usr/local/bin/compass:23:in `<main>'
+*/
+body:before {
+  white-space: pre;
+  font-family: monospace;
+  content: "Error: File to import not found or unreadable: zen.\A        Load paths:\A          Compass::SpriteImporter\A          /mnt/sdb1/www/alfabib.sonderborg.dk/drupal/sites/default/modules/ting_search_context/sass\A          /var/lib/gems/1.9.1/gems/compass-core-1.0.3/stylesheets\A         on line 12 of /mnt/sdb1/www/alfabib.sonderborg.dk/drupal/sites/default/modules/ting_search_context/sass/ting_search_context.base.scss\A \A 7: \A 8: // Include compass\A 9: @import \"compass/css3\";\A 10: \A 11: // Grid - http://zengrids.com\A 12: @import \"zen\";\A 13: \A 14: // Include selected variables from DDBasic\A 15: @import \"configuration/_variables\";\A 16: \A 17: "; }

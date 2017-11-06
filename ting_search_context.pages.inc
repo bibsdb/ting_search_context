@@ -12,10 +12,10 @@ function ting_search_context_content() {
 
   $context_id = $_POST['context_id'];
   $nodes = ting_search_context_get_nodes($context_id, 15);
-  $output = '';
+  $output = array();
   if (!empty($nodes)) {
     foreach ($nodes as $node) {
-      $output .= theme('ting_search_context_content', array('node' => $node));
+      $output[] = theme('ting_search_context_content', array('node' => $node));
     }
   }
   return drupal_json_output($output);
