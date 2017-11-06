@@ -8,22 +8,22 @@
 /* Pane, wrapper and inner
 ========================================================================== */
 .pane-search-context.js-above-search-result {
-  .slick-items {
+  .slick-items.slick-initialized {
     @include zen-clear();
-    height: 200px;
+    max-height: 200px;
   }
   @media only screen and (max-width: $breakpoint-medium) {
-    height: 0;
+    max-height: 0;
   }
 }
 
 .pane-search-context.js-below-search-result {
-  .slick-items {
+  .slick-items.slick-initialized {
     @include zen-clear();
-    height: 0;
+    max-height: 0;
   }
   @media only screen and (max-width: $breakpoint-medium) {
-    height: 200px;
+    max-height: 200px;
   }
 }
 

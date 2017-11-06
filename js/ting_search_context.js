@@ -80,7 +80,6 @@
         position = Drupal.settings.ting_search_context_position;
 
         // On small screens display below search results
-        console.log(breakpoint);
         if (breakpoint.is_small_medium_large()) {
           position = 'js-below-search-result';
         }
@@ -89,7 +88,6 @@
 
           if ($(this).hasClass(position)) {
             pane = $(this);
-            console.log(pane);
             carousel = $(this).find('.slick-items');
 
             carousel.slick({
