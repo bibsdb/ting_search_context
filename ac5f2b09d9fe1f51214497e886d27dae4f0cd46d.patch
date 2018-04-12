@@ -1,0 +1,28 @@
+From ac5f2b09d9fe1f51214497e886d27dae4f0cd46d Mon Sep 17 00:00:00 2001
+From: holt83 <simoh@vejlebib.dk>
+Date: Fri, 17 Nov 2017 16:23:48 +0100
+Subject: [PATCH] Fix empty materials when searching empty cache
+
+---
+ modules/ting_search_context/ting_search_context.module | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/modules/ting_search_context/ting_search_context.module b/modules/ting_search_context/ting_search_context.module
+index ba0993411..3bc6591a5 100644
+--- a/modules/ting_search_context/ting_search_context.module
++++ b/modules/ting_search_context/ting_search_context.module
+@@ -220,6 +220,14 @@ function ting_search_context_ting_pre_execute($request) {
+ 
+     $facets = array_flip($request->getFacets()) + $required_facets;
+     $request->setFacets(array_keys($facets));
++
++    // We need to ensure numberOfTerms will be specified in the SOAP request
++    // against the well. Else opensearch will return error.
++    // We first check if it's already set to avoid overriding values set by
++    // other modules.
++    if (empty($request->getNumFacets())) {
++      $request->setNumFacets(variable_get('ting_search_number_of_facets', 25));
++    }
+   }
+ }
+ 
